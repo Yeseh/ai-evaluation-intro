@@ -1,176 +1,193 @@
-# Evaluation Intro - Azure AI Search for Knowledge Base
+# AI Agent Evaluation Demo
 
-This project sets up an Azure AI Search index with an indexer to process markdown files from an Azure Storage account's knowledge-base folder.
+A demonstration repository showcasing how to evaluate AI agents using Azure AI Search and Azure AI Foundry. This demo shows practical examples of building knowledge-based AI agents and evaluating their performance using various metrics.
 
-## Features
+Perfect for presentations, workshops, or learning about AI agent evaluation in practice!
 
-- 🔍 **Azure AI Search Integration**: Automatically index markdown files from Azure Storage
-- 📁 **Knowledge Base Processing**: Specifically targets markdown files in the `knowledge-base` folder
-- 🔄 **Automated Indexing**: Configurable indexer that runs on a schedule
-- 🔎 **Search Interface**: Interactive search utility to query indexed content
-- 📊 **Rich Metadata**: Extracts file metadata, content, and supports faceted search
+## 🎯 What This Demo Shows
 
-## Setup
+- **Knowledge Base Setup**: How to index markdown documents with Azure AI Search
+- **AI Agent Creation**: Building agents that can search and reason over knowledge bases
+- **Individual Evaluations**: Testing specific aspects like groundedness, intent resolution, and content safety
+- **Document Retrieval Quality**: Measuring how well your agent finds relevant information
+- **Batch Evaluation**: Running evaluations at scale with multiple test cases
+- **Interactive Examples**: Jupyter notebooks you can run step-by-step
 
-### Prerequisites
+## 🚀 Quick Start
 
-- Azure AI Search service
-- Azure Storage account with a container containing your markdown files
+### What You'll Need
+
+- Azure subscription with these services:
+  - Azure AI Search (free tier works!)
+  - Azure Storage Account
+  - Azure AI Foundry project
+  - Azure OpenAI service
 - Python 3.12+
 
-### Installation
+### 5-Minute Setup
 
-1. Install dependencies:
-```bash
-pip install -e .
-```
+1. **Clone and install:**
+   ```bash
+   git clone <this-repo>
+   cd evaluation-intro
+   pip install -e .
+   ```
 
-2. Copy the environment template and configure your Azure credentials:
-```bash
-cp .env.template .env
-```
+2. **Configure your Azure services:**
+   ```bash
+   cp .env.template .env
+   # Edit .env with your Azure credentials (see below)
+   ```
 
-3. Edit `.env` with your Azure service details:
+3. **Run the demos:**
+   ```bash
+   # Set up the knowledge base index
+   python main.py
+   
+   # Open the interactive demos
+   jupyter notebook demo_ai_foundry.ipynb
+   ```
+
+### Environment Configuration
+
+Copy `.env.template` to `.env` and fill in your Azure service details:
+
 ```env
+# Azure AI Search - Get from Azure Portal
 AZURE_SEARCH_SERVICE_NAME=your-search-service-name
-AZURE_SEARCH_ADMIN_KEY=your-search-admin-key
-AZURE_STORAGE_ACCOUNT_NAME=your-storage-account-name
-AZURE_STORAGE_ACCOUNT_KEY=your-storage-account-key
+AZURE_SEARCH_ADMIN_KEY=your-admin-key
+
+# Azure Storage - Any storage account works
+AZURE_STORAGE_ACCOUNT_NAME=your-storage-account
+AZURE_STORAGE_ACCOUNT_KEY=your-storage-key
 AZURE_STORAGE_CONTAINER_NAME=knowledge-base
+
+# Azure OpenAI - For the LLM models
+AZURE_OPENAI_ENDPOINT=https://your-openai.openai.azure.com/
+AZURE_OPENAI_API_KEY=your-api-key
+
+# Azure AI Foundry - For evaluation features
+FOUNDRY_PROJECT_ENDPOINT=https://your-project.cognitiveservices.azure.com/
+FOUNDRY_PROJECT_NAME=your-project-name
+RESOURCE_GROUP_NAME=your-resource-group
+SUBSCRIPTION_ID=your-subscription-id
 ```
 
-### Azure Storage Setup
+## 📚 Demo Scenarios
 
-Ensure your Azure Storage account has a container with the following structure:
-```
-knowledge-base/
-├── core-business/
-│   ├── case-studies.md
-│   ├── company-overview.md
-│   ├── industry-expertise.md
-│   └── service-offerings.md
-└── methodologies/
-    └── meridian-strategic-methodology.md
-```
+This demo uses a fictional consulting company (Meridian Strategic Consulting) knowledge base with realistic documents about:
+- Expert profiles and skills
+- Service offerings
+- Industry expertise
+- Project methodologies
+- Case studies
 
-## Usage
-
-### Setting up the Azure AI Search Index
-
-Run the main script to create the index, data source, and indexer:
-
-```bash
-python main.py
-```
-
-This will:
-1. Create a search index optimized for markdown content
-2. Set up a data source connection to your Azure Storage
-3. Create an indexer that processes markdown files
-4. Start the initial indexing process
-
-### Searching the Knowledge Base
-
-Use the interactive search utility:
-
+### Scenario 1: Basic Knowledge Search
 ```bash
 python search_knowledge_base.py
+# Try: "Who are the AI experts?" or "What services do you offer?"
 ```
 
-Available search commands:
-- `search <query>` - Search for documents containing the query
-- `folder <folder>` - List documents in a specific folder
-- `list` - List all indexed documents
-- `facets` - Show folder facets and document counts
-- `quit` - Exit the search interface
+### Scenario 2: AI Agent with Knowledge Base
+Open `demo_ai_foundry.ipynb` and run the cells to see:
+- How to create an AI agent with knowledge base access
+- Agent responding to complex queries like "I need a consultant with AI/ML expertise for healthcare"
 
-### Programmatic Usage
+### Scenario 3: Evaluation in Action
+The notebook demonstrates:
+- **Intent Resolution**: Does the agent understand what you're asking?
+- **Groundedness**: Are responses based on actual knowledge base content?
+- **Content Safety**: Are responses appropriate and safe?
+- **Retrieval Quality**: How well does the search find relevant documents?
+- **Batch Evaluation**: Testing multiple scenarios at once
 
-You can also use the classes directly in your Python code:
+## 🎓 Learning Objectives
 
-```python
-from azure_search_setup import AzureSearchIndexManager
-from search_knowledge_base import KnowledgeBaseSearcher
+After running this demo, you'll understand:
 
-# Setup
-manager = AzureSearchIndexManager(
-    search_service_name="your-service",
-    search_admin_key="your-key",
-    storage_account_name="your-storage",
-    storage_account_key="your-storage-key"
-)
-manager.setup_complete_search_solution()
+- **RAG Patterns**: How to combine search with LLMs for knowledge-based answers
+- **Agent Architecture**: Building agents that can use tools (like search) to answer questions
+- **Evaluation Strategies**: Multiple ways to measure AI agent performance
+- **Azure AI Services**: Practical integration of Search, OpenAI, and AI Foundry
+- **Quality Metrics**: What makes a good vs. poor agent response
 
-# Search
-searcher = KnowledgeBaseSearcher("your-service", "your-key")
-results = searcher.search("company overview")
-```
+## 💡 Demo Tips
 
-## Index Schema
+**First time running?**
+1. Make sure all Azure services are created and running
+2. Run `python main.py` first to set up the search index
+3. Start with `demo_ai_foundry.ipynb` - it has the most complete examples
 
-The search index includes these fields:
+**Having issues?**
+- Check your `.env` file - most problems are configuration-related
+- Ensure your Azure OpenAI deployment uses "gpt-4" or similar model
+- The knowledge base documents are included locally, so no Azure Storage needed for basic demo
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | String | Unique document identifier (key) |
-| `content` | String | Full text content of the markdown file |
-| `title` | String | Document title (extracted from content) |
-| `file_path` | String | Full path to the file in storage |
-| `file_name` | String | Name of the file |
-| `folder` | String | Folder containing the file |
-| `last_modified` | DateTime | When the file was last modified |
-| `size` | Int64 | File size in bytes |
-| `metadata_storage_*` | Various | Additional storage metadata |
+**Want to go deeper?**
+- Try different queries to see how evaluation scores change
+- Modify the agent instructions and see the impact
+- Add your own test cases to `eval.jsonl`
 
-## Indexer Configuration
+## 📊 What Gets Evaluated
 
-The indexer is configured to:
-- Process only markdown files (`.md`, `.markdown`)
-- Run on a daily schedule
-- Extract text content and metadata
-- Handle file updates and deletions
-- Focus on the `knowledge-base` folder in your storage container
+| Demo Section | What It Shows | Why It Matters |
+|--------------|---------------|----------------|
+| **Intent Resolution** | Does the agent understand the question? | Avoid irrelevant responses |
+| **Groundedness** | Are answers based on actual documents? | Prevent hallucination |
+| **Content Safety** | Are responses appropriate? | Ensure professional, safe outputs |
+| **Retrieval Quality** | Does search find the right documents? | Better search = better answers |
+| **Batch Evaluation** | How does it perform across many test cases? | Real-world performance assessment |
 
-## Troubleshooting
-
-### Common Issues
-
-1. **Authentication Errors**: Verify your Azure credentials in the `.env` file
-2. **Storage Access**: Ensure the storage account key has read permissions
-3. **Search Service**: Confirm the search service name and admin key are correct
-4. **Container Not Found**: Check that the storage container exists and contains markdown files
-
-### Checking Indexer Status
-
-You can check the indexer status programmatically:
-
-```python
-manager = AzureSearchIndexManager(...)
-status = manager.get_indexer_status()
-print(f"Status: {status.status}")
-print(f"Last run: {status.last_result.start_time}")
-```
-
-## Development
-
-### Project Structure
+## 📁 Demo Structure
 
 ```
-├── azure_search_setup.py      # Main Azure AI Search setup
-├── search_knowledge_base.py   # Search utility
-├── main.py                    # Entry point
-├── .env.template              # Environment variables template
-└── knowledge-base/            # Local markdown files (for reference)
+├── demo_ai_foundry.ipynb          # 👈 START HERE - Main demo notebook
+├── demo_llm_as_judge.ipynb        # Alternative evaluation approaches
+├── demo_semantic_similarity.ipynb # Similarity-based evaluation
+├── main.py                        # Setup script (run first)
+├── search_knowledge_base.py       # Search utilities
+├── eval.jsonl                     # Sample test cases
+├── config.py                      # Configuration
+└── knowledge-base/                # Sample documents
+    ├── people-expertise/          # Expert profiles, skills
+    ├── core-business/             # Services, industry info
+    ├── methodologies/             # How-to guides
+    └── market-intelligence/       # Industry analysis
 ```
 
-### Adding New Features
+## 🔧 Customizing the Demo
 
-The codebase is designed to be extensible. You can:
-- Add new fields to the index schema
-- Implement custom text processing
-- Add new search capabilities
-- Integrate with other Azure Cognitive Services
+Want to adapt this for your own use case?
 
-## License
+- **Replace knowledge-base/**: Add your own markdown documents
+- **Update eval.jsonl**: Create test cases relevant to your domain
+- **Modify agent instructions**: Change the agent's role and behavior
+- **Add new evaluators**: Test different aspects of performance
 
-This project is provided as-is for educational and demonstration purposes.
+## 🎤 Using This for Presentations
+
+This demo is perfect for:
+- **Workshops**: Hands-on AI evaluation training
+- **Technical talks**: Live coding demonstrations
+- **Sales demos**: Showing Azure AI capabilities
+- **Learning sessions**: Understanding RAG evaluation patterns
+
+**Presentation flow:**
+1. Show the problem: "How do you know if your AI agent is good?"
+2. Demo the agent: Run a few queries, show responses
+3. Introduce evaluation: "Let's measure the quality..."
+4. Walk through metrics: Intent, groundedness, safety, retrieval
+5. Show batch evaluation: "Now let's test 100 cases at once"
+
+**Sample queries that work well:**
+- "I need an AI expert for a healthcare project"
+- "What's your experience with financial services?"
+- "How do you approach digital transformation?"
+
+## 🤝 Contributing
+
+Found a bug or want to improve the demo? PRs welcome! This is meant to be a learning resource for the community.
+
+## 📄 License
+
+This demo is provided as-is for educational and demonstration purposes. Feel free to use it in your own presentations and workshops!
