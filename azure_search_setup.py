@@ -137,16 +137,16 @@ class AzureSearchIndexManager:
                         InputFieldMappingEntry(name="title", source="/document/metadata_storage_name"),
                         InputFieldMappingEntry(name="chunk", source="/document/pages/*"),  
                         InputFieldMappingEntry(name="content_vector", source="/document/pages/*/content_vector"),
-                        # InputFieldMappingEntry(name="header_1", source="/document/header_1"),
-                        # InputFieldMappingEntry(name="header_2", source="/document/header_2"),
-                        # InputFieldMappingEntry(name="header_3", source="/document/header_3"),
-                        # InputFieldMappingEntry(name="header_4", source="/document/header_4"),
                         #metadata
                         InputFieldMappingEntry(name="id", source="/document/metadata_storage_name"),
                         InputFieldMappingEntry(name="file_name", source="/document/metadata_storage_name"),
                         InputFieldMappingEntry(name="file_path", source="/document/metadata_storage_path"),
                         InputFieldMappingEntry(name="folder", source="/document/metadata_storage_path"),
                         InputFieldMappingEntry(name="last_modified", source="/document/metadata_storage_last_modified"),
+                        InputFieldMappingEntry(name="header_1", source="/document/sections/h1"),
+                        InputFieldMappingEntry(name="header_2", source="/document/sections/h2"),
+                        InputFieldMappingEntry(name="header_3", source="/document/sections/h3"),
+                        InputFieldMappingEntry(name="header_4", source="/document/sections/h4"),
                     ])
                 ],  
                 parameters=SearchIndexerIndexProjectionsParameters(  
@@ -169,16 +169,17 @@ class AzureSearchIndexManager:
             SearchField(name="title", type=SearchFieldDataType.String, analyzer_name="standard.lucene", sortable=True, filterable=True, facetable=True),  
             SearchField(name="chunk_id", type=SearchFieldDataType.String, key=True, sortable=True, filterable=True, facetable=True, analyzer_name="keyword"),  
             SearchField(name="chunk", type=SearchFieldDataType.String, sortable=False, filterable=False, facetable=False),  
-            # SearchField(name="header_1", type=SearchFieldDataType.String, sortable=False, filterable=True, facetable=True),  
-            # SearchField(name="header_2", type=SearchFieldDataType.String, sortable=False, filterable=True, facetable=True),  
-            # SearchField(name="header_3", type=SearchFieldDataType.String, sortable=False, filterable=True, facetable=True),  
-            # SearchField(name="header_4", type=SearchFieldDataType.String, sortable=False, filterable=True, facetable=True),  
             SearchField(name="id", type=SearchFieldDataType.String, sortable=False, filterable=True, facetable=True),  
+            SearchField(name="header_1", type=SearchFieldDataType.String, sortable=False, filterable=True, facetable=True),  
+            SearchField(name="header_2", type=SearchFieldDataType.String, sortable=False, filterable=True, facetable=True),  
+            SearchField(name="header_3", type=SearchFieldDataType.String, sortable=False, filterable=True, facetable=True),  
+            SearchField(name="header_4", type=SearchFieldDataType.String, sortable=False, filterable=True, facetable=True),
             SimpleField(name="file_path", type=SearchFieldDataType.String, filterable=True),
             SimpleField(name="file_name", type=SearchFieldDataType.String, filterable=True),
             SimpleField(name="folder", type=SearchFieldDataType.String, filterable=True, facetable=True),
             SimpleField(name="last_modified", type=SearchFieldDataType.DateTimeOffset, filterable=True, sortable=True),
             SearchField(name="content_vector", type=SearchFieldDataType.Collection(SearchFieldDataType.Single), vector_search_dimensions=3072, vector_search_profile_name="myHnswProfile"),
+
         ]
 
         vector_search=VectorSearch(
@@ -212,6 +213,7 @@ class AzureSearchIndexManager:
                     prioritized_fields=SemanticPrioritizedFields(
                         title_field=SemanticField(field_name="title"),
                         content_fields=[SemanticField(field_name="chunk")],
+                        keywords_fields=[SemanticField(field_name="chunk")]
                     )
                 )
             ])
@@ -265,6 +267,8 @@ class AzureSearchIndexManager:
             configuration=IndexingParametersConfiguration(
                 indexed_file_name_extensions=".md",
                 parsing_mode="markdown",
+                markdown_header_depth="h4",
+                markdown_parsing_submode="oneToMany",
                 query_timeout=None # type: ignore
             ))
         

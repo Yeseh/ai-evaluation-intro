@@ -1,0 +1,296 @@
+{
+  "test_cases": [
+    {
+      "id": "1.1",
+      "category": "Company Information & Structure",
+      "subcategory": "Basic Company Information",
+      "query": "What is Meridian Strategic Consulting's mission statement and when was it founded?",
+      "reference_answer": "Meridian Strategic Consulting was founded in 2018. Our mission is to empower organizations to achieve breakthrough performance through innovative strategies, data-driven insights, and collaborative partnerships that create lasting value for all stakeholders. We are a premier management consulting firm specializing in digital transformation, operational excellence, and strategic planning, partnering with Fortune 500 companies and emerging growth businesses.",
+      "evaluation_criteria": [
+        "Must include founding year (2018)",
+        "Must include complete or paraphrased mission statement",
+        "Should mention core service areas (digital transformation, operational excellence, strategic planning)"
+      ]
+    },
+    {
+      "id": "1.2",
+      "category": "Company Information & Structure",
+      "subcategory": "Leadership Structure",
+      "query": "Who are the senior partners at Meridian and what are their areas of expertise?",
+      "reference_answer": "Meridian's senior leadership includes: Sarah Chen: Managing Partner & CEO, expertise in digital transformation strategy, technology leadership, and organizational scaling; Michael Rodriguez: Senior Partner for Strategy Practice, specializing in strategic planning, M&A advisory, and market entry with focus on manufacturing, energy, and automotive industries; Dr. Amanda Foster: Senior Partner for Digital Transformation, expert in AI/ML, cloud architecture, cybersecurity, with technical certifications in AWS, Azure, and Google Cloud",
+      "evaluation_criteria": [
+        "Must include all three senior partners with correct names and titles",
+        "Must include their primary expertise areas",
+        "Bonus points for specific industry focus or technical certifications"
+      ]
+    },
+    {
+      "id": "1.3",
+      "category": "Company Information & Structure",
+      "subcategory": "Organizational Metrics",
+      "query": "How many employees does Meridian have and what is their client retention rate?",
+      "reference_answer": "Meridian Strategic Consulting has 450+ consultants and staff members. The company has served 200+ organizations across 15+ major sectors with a 94% client retention rate. They maintain an average project ROI of 340% and have office locations in Chicago (headquarters), New York, San Francisco, Austin, Atlanta, London, and Toronto.",
+      "evaluation_criteria": [
+        "Must include employee count (450+)",
+        "Must include client retention rate (94%)",
+        "Should include additional metrics like client count, ROI, or office locations"
+      ]
+    },
+    {
+      "id": "2.1",
+      "category": "Service Offerings & Capabilities",
+      "subcategory": "Service Portfolio",
+      "query": "What are the main practice areas at Meridian and what services do they offer?",
+      "reference_answer": "Meridian has five main practice areas: 1. Strategy & Planning: Strategic planning, market entry, M&A advisory, competitive positioning; 2. Digital Transformation: Technology strategy, AI implementation, cloud migration, cybersecurity; 3. Operations Excellence: Process optimization, supply chain management, lean manufacturing, cost reduction; 4. People & Change: Organizational design, change management, leadership development, culture transformation; 5. Data & Analytics: Business intelligence, predictive analytics, performance management systems. Each practice offers both consulting services and implementation support with typical project durations ranging from 8-24 weeks.",
+      "evaluation_criteria": [
+        "Must list all five practice areas correctly",
+        "Must include 2-3 key services for each practice area",
+        "Should mention implementation focus or project timelines"
+      ]
+    },
+    {
+      "id": "2.2",
+      "category": "Service Offerings & Capabilities",
+      "subcategory": "Digital Transformation Capabilities",
+      "query": "What specific AI and automation services does Meridian offer, and what kind of ROI can clients expect?",
+      "reference_answer": "Meridian offers comprehensive AI & Automation Implementation services including AI opportunity assessment, solution design and architecture, implementation and testing, and change management support. These engagements typically last 16-28 weeks with teams of 5-10 consultants. Clients can expect a typical ROI of 400-600%, making this one of our highest-value service offerings. Dr. Amanda Foster leads this practice with expertise in machine learning, having 12 patents in ML and automation, and the team has delivered $500M+ in client value through AI implementations.",
+      "evaluation_criteria": [
+        "Must mention AI/automation services and components",
+        "Must include ROI range (400-600%)",
+        "Should include team size, duration, or leadership details",
+        "Bonus for specific value delivered or credentials"
+      ]
+    },
+    {
+      "id": "2.3",
+      "category": "Service Offerings & Capabilities",
+      "subcategory": "Industry Expertise",
+      "query": "What industries does Meridian specialize in and who leads each vertical?",
+      "reference_answer": "Meridian has deep expertise across six major industries: Healthcare & Life Sciences: Led by Dr. Amanda Foster, 35 consultants, serving 15 healthcare systems and 8 pharmaceutical companies; Financial Services: Led by Sarah Chen, 42 consultants, serving 12 banks, 6 insurance companies, and 4 fintech firms; Manufacturing & Industrial: Led by Michael Rodriguez, 38 consultants, serving 20 manufacturing companies and 8 automotive suppliers; Technology & Software: Led by Dr. Amanda Foster, 45 consultants, serving 25 technology companies and 12 startups; Energy & Utilities: Led by Michael Rodriguez, 28 consultants, serving 8 utilities and 6 energy companies; Government & Public Sector: Led by Patricia Williams, 22 consultants, serving 5 federal agencies and 12 state/local governments",
+      "evaluation_criteria": [
+        "Must list major industries with correct vertical leads",
+        "Should include team sizes and client counts",
+        "Bonus for specific client types or sub-sectors"
+      ]
+    },
+    {
+      "id": "3.1",
+      "category": "People & Expertise",
+      "subcategory": "Expert Identification",
+      "query": "I need a consultant with AI/ML expertise and healthcare industry experience for a 6-month project. Who would be the best match?",
+      "reference_answer": "Dr. Amanda Foster would be the ideal match for this project. She is a Senior Partner with expertise in AI/ML and leads both the Digital Transformation practice and Healthcare vertical. She has a PhD in Computer Science from Carnegie Mellon, holds 12 patents in machine learning and automation, and has led AI implementations generating $500M+ in client value. She has specific healthcare experience with projects including AI-powered diagnostic tools, predictive analytics for patient outcomes, and clinical decision support systems. However, she is currently available starting February 2025, so timeline coordination would be needed.",
+      "evaluation_criteria": [
+        "Must identify Dr. Amanda Foster as the best match",
+        "Must mention her AI/ML and healthcare expertise",
+        "Should include relevant credentials or experience",
+        "Bonus for mentioning availability constraints"
+      ]
+    },
+    {
+      "id": "3.2",
+      "category": "People & Expertise",
+      "subcategory": "Team Composition",
+      "query": "What would be the typical team structure for a $1.5M digital transformation project?",
+      "reference_answer": "For a $1.5M digital transformation project, the typical team structure would include: 1 Partner for overall project leadership and client relationship management; 1-2 Principals for day-to-day project management and delivery; 2-3 Senior Managers for specific workstream leadership; 4-6 additional consultants (Managers and Senior Consultants). The project would likely run 16-24 weeks with the Partner at 60% utilization, Principals at 70%, and Senior Managers at 75%. Given the digital transformation focus, Dr. Amanda Foster would likely be the Partner lead, with Kevin Liu (Principal, Cloud & Infrastructure) as a key team member.",
+      "evaluation_criteria": [
+        "Must provide realistic team structure and sizing",
+        "Should include utilization rates or timeline estimates",
+        "Must identify appropriate expertise for digital transformation",
+        "Bonus for specific individual recommendations"
+      ]
+    },
+    {
+      "id": "3.3",
+      "category": "People & Expertise",
+      "subcategory": "Skills and Certifications",
+      "query": "What cloud certifications do Meridian consultants have, and who has the most technical expertise?",
+      "reference_answer": "Meridian has strong cloud certification coverage: AWS Solutions Architect Professional: Dr. Amanda Foster, Kevin Liu; Microsoft Azure Solutions Architect: Dr. Amanda Foster, Kevin Liu; Google Cloud Professional Architect: Dr. Amanda Foster, Kevin Liu. Dr. Amanda Foster has the most comprehensive technical expertise with certifications across all three major cloud platforms, plus CISSP for cybersecurity. Kevin Liu is the Principal for Cloud & Infrastructure with 10 years of experience and specializes in multi-cloud architecture, Kubernetes, and DevOps. The firm also has additional consultants with intermediate-level cloud skills including Sarah Chen, David Kumar, and Maria Santos.",
+      "evaluation_criteria": [
+        "Must list specific cloud certifications and certified individuals",
+        "Must identify Dr. Amanda Foster as having the most technical expertise",
+        "Should mention Kevin Liu's role and specialization",
+        "Bonus for additional context on other team members"
+      ]
+    },
+    {
+      "id": "4.1",
+      "category": "Market Intelligence & Strategy",
+      "subcategory": "Industry Trends",
+      "query": "What are the current trends in AI consulting and what growth rates is the market seeing?",
+      "reference_answer": "The AI consulting market is experiencing exceptional growth at 45% CAGR, with the global market reaching $47B in 2024 (+52% YoY). Key trends include enterprise AI adoption reaching 65% of large organizations, generative AI expanding beyond content creation, and AI governance becoming a board-level priority. Client demand patterns show high demand for AI strategy development and implementation roadmaps, emerging demand for AI risk management and algorithmic auditing, and future demand anticipated for quantum AI and autonomous business processes. Meridian is well-positioned with Dr. Amanda Foster's expertise and 15+ successful AI implementations.",
+      "evaluation_criteria": [
+        "Must include growth rate (45% CAGR) and market size ($47B)",
+        "Must mention key trends in enterprise adoption and governance",
+        "Should include demand patterns and Meridian's positioning",
+        "Bonus for specific statistics or future trends"
+      ]
+    },
+    {
+      "id": "4.2",
+      "category": "Market Intelligence & Strategy",
+      "subcategory": "Competitive Positioning",
+      "query": "How does Meridian position itself against the Big Four consulting firms?",
+      "reference_answer": "Meridian positions itself as providing better value and personalized service compared to the Big Four, with rates typically 10-20% lower than Big Four firms. Key differentiators include: Partner-level attention rather than junior consultants following rigid methodologies; Boutique service model with customized solutions; Implementation focus ensuring strategies become reality; Superior expertise in specialized areas with proven methodology; 94% client satisfaction vs. industry averages; Average project ROI of 340% demonstrating measurable value. The value proposition emphasizes that while rates are competitive, clients receive senior-level expertise and outcomes-focused delivery.",
+      "evaluation_criteria": [
+        "Must mention rate comparison (10-20% lower)",
+        "Must include key differentiators like partner attention and customization",
+        "Should include performance metrics (94% satisfaction, 340% ROI)",
+        "Bonus for specific value proposition messaging"
+      ]
+    },
+    {
+      "id": "4.3",
+      "category": "Market Intelligence & Strategy",
+      "subcategory": "Market Opportunities",
+      "query": "What are the fastest-growing consulting segments and how is Meridian positioned for them?",
+      "reference_answer": "The fastest-growing consulting segments through 2027 are: 1. AI and automation consulting: 35-40% CAGR; 2. Sustainability and ESG: 25-30% CAGR; 3. Cybersecurity transformation: 20-25% CAGR; 4. Future of work: 18-22% CAGR. Meridian is well-positioned for AI/automation with Dr. Amanda Foster's leadership and proven track record. The firm is developing sustainability practice capabilities and has strong cybersecurity expertise. Strategic recommendations include expanding AI consulting capabilities through targeted hiring, developing sustainability practice with ESG focus, and creating outcome-based pricing pilot programs to capture value-based fees in high-growth segments.",
+      "evaluation_criteria": [
+        "Must list top growth segments with correct CAGR ranges",
+        "Must assess Meridian's current positioning in each area",
+        "Should include strategic recommendations for growth",
+        "Bonus for specific capability gaps or investment priorities"
+      ]
+    },
+    {
+      "id": "5.1",
+      "category": "Methodologies & Project Execution",
+      "subcategory": "Project Methodology",
+      "query": "What is Meridian's standard project methodology and what are the key phases?",
+      "reference_answer": "Meridian uses the proprietary Meridian Strategic Methodology (MSM), a five-phase framework: Phase 1: Discover & Diagnose (Weeks 1-3) - Understand current state and identify root causes; Phase 2: Design & Develop (Weeks 4-8) - Create future state vision and solution architecture; Phase 3: Plan & Prepare (Weeks 9-12) - Develop detailed implementation plans and prepare for execution; Phase 4: Execute & Implement (Weeks 13-20) - Execute solution and manage transformation; Phase 5: Optimize & Sustain (Weeks 21-24) - Optimize performance and ensure sustainable results. Each phase has specific success criteria, quality gates, and deliverables. The methodology emphasizes fact-based decision making, collaborative partnership, implementation focus, and continuous learning.",
+      "evaluation_criteria": [
+        "Must list all five phases with correct names and week ranges",
+        "Must include brief description of each phase objective",
+        "Should mention core principles or quality gates",
+        "Bonus for specific success criteria or methodology adaptations"
+      ]
+    },
+    {
+      "id": "5.2",
+      "category": "Methodologies & Project Execution",
+      "subcategory": "Best Practices",
+      "query": "What are Meridian's best practices for digital transformation projects?",
+      "reference_answer": "Meridian's digital transformation best practices include: 1. Prioritize User Experience: Design solutions with end-user needs as primary consideration, conduct user testing throughout development, create intuitive interfaces requiring minimal training (results in 70% higher user adoption rates); 2. Implement in Phases: Break large transformations into manageable phases, deliver value early and often, use lessons from each phase to improve subsequent ones (results in 45% faster time-to-value); 3. Data-Driven Decision Making: Establish baseline metrics before implementation, create real-time dashboards for monitoring, use A/B testing for optimization (results in 30% better performance outcomes); 4. Start with Leadership Alignment: Ensure visible and consistent leadership support, align leadership team on vision and messaging (results in 80% higher change success probability)",
+      "evaluation_criteria": [
+        "Must include multiple specific best practices with descriptions",
+        "Must include quantified impact/results for each practice",
+        "Should cover both technical and change management aspects",
+        "Bonus for additional practices or implementation details"
+      ]
+    },
+    {
+      "id": "5.3",
+      "category": "Methodologies & Project Execution",
+      "subcategory": "Quality Standards",
+      "query": "What quality standards and success metrics does Meridian use for projects?",
+      "reference_answer": "Meridian maintains rigorous quality standards across all projects: Quality Standards: All deliverables must meet defined quality criteria; All processes must follow established methodologies; Minimum 4.0/5.0 client satisfaction rating required at each gate; Minimum 90% of projected benefits realized. Success Metrics: On-time Delivery: Target 95% of milestones delivered on schedule; Budget Adherence: Target less than 5% variance from approved budget; Client Satisfaction: Target average rating of 4.5/5.0 or higher; Benefits Realization: Target 90% or more of projected benefits achieved. The firm maintains a 94% project success rate with 98% timeline adherence across all engagements.",
+      "evaluation_criteria": [
+        "Must include quality standards with specific criteria",
+        "Must include success metrics with target percentages",
+        "Should mention overall performance statistics",
+        "Bonus for quality review processes or escalation procedures"
+      ]
+    },
+    {
+      "id": "6.1",
+      "category": "Pricing & Commercial Terms",
+      "subcategory": "Pricing Structure",
+      "query": "What are Meridian's standard consulting rates by level?",
+      "reference_answer": "Meridian's standard rates (effective October 2024) are: Senior Partner: $5,500/day ($27,500/week); Partner: $4,500/day ($22,500/week); Principal: $3,200/day ($16,000/week); Senior Manager: $2,400/day ($12,000/week); Manager: $1,800/day ($9,000/week); Senior Consultant: $1,200/day ($6,000/week); Consultant: $800/day ($4,000/week). Specialized roles command premium rates: Industry experts (+25%), Technology architects (+20%), Certified specialists (+15%), Former executives (+30%). The firm offers various pricing models including time & materials, fixed price, value-based pricing, and retainer arrangements.",
+      "evaluation_criteria": [
+        "Must include daily/weekly rates for multiple levels",
+        "Should mention premium rates for specialized roles",
+        "Must include different pricing model options",
+        "Bonus for specific premium percentages or model descriptions"
+      ]
+    },
+    {
+      "id": "6.2",
+      "category": "Pricing & Commercial Terms",
+      "subcategory": "Value Proposition",
+      "query": "How does Meridian justify its premium pricing compared to other consulting firms?",
+      "reference_answer": "Meridian justifies premium pricing through demonstrated value delivery: Average project ROI of 340% vs. industry averages; 94% client satisfaction rating and 94% client retention rate; Partner-level attention vs. junior consultant delivery at larger firms; Specialized expertise with proven methodologies and 200+ successful projects; Implementation focus ensuring strategies are executed, not just developed; Boutique service model allowing customized solutions vs. rigid frameworks. Value-based pricing captures 8-15% of first-year benefits, with typical fees representing 120% of cost-based pricing but delivering 3x higher ROI than alternative approaches. The firm's track record shows 90% of clients achieve projected benefits within 12 months.",
+      "evaluation_criteria": [
+        "Must include quantified value metrics (ROI, satisfaction, retention)",
+        "Must explain value differentiators vs. competitors",
+        "Should mention value-based pricing approach",
+        "Bonus for specific value capture rates or benefit realization statistics"
+      ]
+    },
+    {
+      "id": "complex.1",
+      "category": "Complex Multi-Document Queries",
+      "subcategory": "Integrated Response",
+      "query": "For a healthcare digital transformation project worth $2M, who should lead the team, what methodology should we use, and what ROI can the client expect?",
+      "reference_answer": "For a $2M healthcare digital transformation project: Team Leadership: Dr. Amanda Foster should lead as Senior Partner, given her expertise in both AI/ML and healthcare verticals, with support from Kevin Liu (Principal, Cloud & Infrastructure). Methodology: Use the Meridian Strategic Methodology (MSM) 5-phase framework, with emphasis on Phase 2 (Design & Develop) for solution architecture and Phase 4 (Execute & Implement) for transformation execution. Timeline would be 16-24 weeks. ROI Expectations: Digital transformation projects typically deliver 400-600% ROI, and healthcare AI implementations have delivered $500M+ in client value. For a $2M investment, expect $8-12M in benefits over 3 years. Team structure would include 1 Partner (60% utilization), 1-2 Principals (70%), 2-3 Senior Managers (75%), and 4-6 additional consultants.",
+      "evaluation_criteria": [
+        "Must identify Dr. Amanda Foster as team lead",
+        "Must reference MSM methodology with specific phases",
+        "Must include ROI range (400-600%) and realistic benefit projections",
+        "Should integrate team structure, timeline, and healthcare-specific considerations"
+      ]
+    },
+    {
+      "id": "consistency.1",
+      "category": "Conflicting Information Testing",
+      "subcategory": "Data Consistency",
+      "query": "What's Meridian's employee count?",
+      "reference_answer": "Meridian Strategic Consulting has 450+ consultants and staff members. This includes consultants across all practice areas and industries, plus support staff in operations, business development, and administration across their seven office locations (Chicago headquarters, New York, San Francisco, Austin, Atlanta, London, and Toronto).",
+      "evaluation_criteria": [
+        "Must state 450+ employees consistently",
+        "Should not conflict with other employee count references",
+        "Bonus for mentioning breakdown or office locations"
+      ]
+    },
+    {
+      "id": "synthesis.1",
+      "category": "Trend Analysis Queries",
+      "subcategory": "Strategic Synthesis",
+      "query": "How should Meridian position itself for the AI consulting boom based on current market trends and our capabilities?",
+      "reference_answer": "Based on the 45% CAGR growth in AI consulting and $47B market size, Meridian should leverage its strong position: Current Strengths: Dr. Amanda Foster's leadership with 12 ML patents, 15+ successful AI implementations, and $500M+ in delivered client value; existing AI & Automation practice with 400-600% ROI track record. Strategic Positioning: Expand AI consulting capabilities through targeted hiring, emphasize implementation focus vs. strategy-only competitors, develop quantum AI and autonomous business process capabilities for future demand. Market Approach: Target the 65% of large enterprises adopting AI, focus on AI governance and risk management (emerging high-demand area), and leverage boutique model advantage for customized AI solutions vs. Big Four rigid frameworks.",
+      "evaluation_criteria": [
+        "Must reference specific market trends (45% CAGR, $47B market)",
+        "Must connect to Meridian's AI capabilities and track record",
+        "Should include strategic recommendations for market positioning",
+        "Bonus for forward-looking opportunities and competitive differentiation"
+      ]
+    }
+  ],
+  "metadata": {
+    "total_test_cases": 20,
+    "categories": [
+      "Company Information & Structure",
+      "Service Offerings & Capabilities", 
+      "People & Expertise",
+      "Market Intelligence & Strategy",
+      "Methodologies & Project Execution",
+      "Pricing & Commercial Terms",
+      "Complex Multi-Document Queries",
+      "Conflicting Information Testing",
+      "Trend Analysis Queries"
+    ],
+    "evaluation_frameworks": [
+      "Semantic Similarity Testing",
+      "LLM-as-Judge Evaluation", 
+      "Azure AI Foundry Evaluation"
+    ],
+    "success_thresholds": {
+      "semantic_similarity": {
+        "excellent": 0.85,
+        "good": 0.75,
+        "satisfactory": 0.65
+      },
+      "llm_judge": {
+        "excellent": 4.5,
+        "good": 4.0,
+        "satisfactory": 3.0
+      },
+      "foundry_metrics": {
+        "groundedness": 4.0,
+        "relevance": 4.2,
+        "overall": 4.0
+      }
+    },
+    "created_date": "2025-10-05",
+    "source_document": "demo-plan.md"
+  }
+}

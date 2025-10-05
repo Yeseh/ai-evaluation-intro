@@ -6,30 +6,58 @@ This script provides functions to search through the indexed markdown files.
 import os
 from typing import List, Dict, Any, Optional
 from azure.search.documents import SearchClient
-from azure.search.documents.models import VectorizedQuery
+from azure.search.documents.models import VectorizedQuery, QueryType, QueryCaptionType, QueryAnswerType
 from azure.core.credentials import AzureKeyCredential
+from azure.identity import DefaultAzureCredential
+from openai import AzureOpenAI
 from dotenv import load_dotenv
+
+import config
 
 
 class KnowledgeBaseSearcher:
     """Search client for querying the knowledge base index."""
     
-    def __init__(self, search_service_name: str, search_admin_key: str, index_name: str = "knowledge-base-index"):
+    def __init__(self, index_name: str = "evaluation-knowledge-base-index"):
         """Initialize the search client.
         
         Args:
-            search_service_name: Name of the Azure Search service
-            search_admin_key: Admin key for Azure Search service
-            index_name: Name of the search index (default: knowledge-base-index)
+            index_name: Name of the search index (default: evaluation-knowledge-base-index)
         """
-        search_endpoint = f"https://{search_service_name}.search.windows.net"
-        credential = AzureKeyCredential(search_admin_key)
+        search_endpoint = config.search_service_endpoint 
+        credential = DefaultAzureCredential() 
         
         self.search_client = SearchClient(
             endpoint=search_endpoint,
             index_name=index_name,
             credential=credential
         )
+        
+        # Initialize OpenAI client for embeddings
+        self.openai_client = AzureOpenAI(
+            azure_endpoint=config.azure_openai_endpoint,
+            azure_ad_token_provider=lambda: credential.get_token("https://cognitiveservices.azure.com/.default").token,
+            api_version="2024-02-01"
+        )
+    
+    def _generate_embedding(self, text: str) -> List[float]:
+        """Generate embedding for the given text using Azure OpenAI.
+        
+        Args:
+            text: Text to generate embedding for
+            
+        Returns:
+            List of floats representing the embedding vector
+        """
+        try:
+            response = self.openai_client.embeddings.create(
+                input=text,
+                model="text-embedding-3-large"
+            )
+            return response.data[0].embedding
+        except Exception as e:
+            print(f"Error generating embedding: {e}")
+            return []
     
     def search(
         self,
@@ -52,17 +80,13 @@ class KnowledgeBaseSearcher:
             List of search results
         """
         try:
-            # Set default highlight fields
-            if highlight_fields is None:
-                highlight_fields = ["content", "title"]
-            
+
             results = self.search_client.search(
                 search_text=query,
                 top=top,
                 filter=filters,
                 order_by=order_by,
-                highlight_fields=highlight_fields,
-                select=["id", "title", "content", "file_name", "folder", "file_path", "last_modified"]
+                select=["id", "title", "chunk", "file_name", "folder", "file_path", "last_modified"]
             )
             
             search_results = []
@@ -75,7 +99,7 @@ class KnowledgeBaseSearcher:
                 search_result = {
                     "score": result.get('@search.score', 0),
                     "title": result.get('title', 'Untitled'),
-                    "content": result.get('content', '')[:500] + "..." if len(result.get('content', '')) > 500 else result.get('content', ''),
+                    "chunk": result.get('chunk', '')[:500] + "..." if len(result.get('chunk', '')) > 500 else result.get('chunk', ''),
                     "file_name": result.get('file_name', ''),
                     "folder": result.get('folder', ''),
                     "file_path": result.get('file_path', ''),
@@ -88,6 +112,204 @@ class KnowledgeBaseSearcher:
             
         except Exception as e:
             print(f"Error during search: {e}")
+            return []
+    
+    def vector_search(
+        self,
+        query: str,
+        top: int = 5,
+        filters: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """Search using vector similarity (semantic search).
+        
+        Args:
+            query: Search query string
+            top: Number of results to return (default: 5)
+            filters: OData filter expression
+            
+        Returns:
+            List of search results ranked by semantic similarity
+        """
+        try:
+            # Generate embedding for the query
+            query_vector = self._generate_embedding(query)
+            
+            if not query_vector:
+                print("Failed to generate query embedding")
+                return []
+            
+            # Create vectorized query
+            vector_query = VectorizedQuery(
+                vector=query_vector,
+                k_nearest_neighbors=top,
+                fields="content_vector"
+            )
+            
+            results = self.search_client.search(
+                search_text=None,  # Pure vector search
+                vector_queries=[vector_query],
+                top=top,
+                filter=filters,
+                select=["id", "title", "chunk", "file_name", "folder", "file_path", "last_modified"]
+            )
+            
+            search_results = []
+            for result in results:
+                search_result = {
+                    "score": result.get('@search.score', 0),
+                    "title": result.get('title', 'Untitled'),
+                    "chunk": result.get('chunk', ''),
+                    "file_name": result.get('file_name', ''),
+                    "folder": result.get('folder', ''),
+                    "file_path": result.get('file_path', ''),
+                    "last_modified": result.get('last_modified', ''),
+                    "search_type": "vector"
+                }
+                search_results.append(search_result)
+            
+            return search_results
+            
+        except Exception as e:
+            print(f"Error during vector search: {e}")
+            return []
+    
+    def hybrid_search(
+        self,
+        query: str,
+        top: int = 5,
+        filters: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """Search using hybrid approach (keyword + vector).
+        
+        Args:
+            query: Search query string
+            top: Number of results to return (default: 5)
+            filters: OData filter expression
+            
+        Returns:
+            List of search results combining keyword and semantic similarity
+        """
+        try:
+            # Generate embedding for the query
+            query_vector = self._generate_embedding(query)
+            
+            if not query_vector:
+                print("Failed to generate query embedding, falling back to keyword search")
+                return self.search(query, top, filters)
+            
+            # Create vectorized query
+            vector_query = VectorizedQuery(
+                vector=query_vector,
+                k_nearest_neighbors=50,  # Get more candidates for reranking
+                fields="content_vector"
+            )
+            
+            results = self.search_client.search(
+                search_text=query,  # Keyword search
+                vector_queries=[vector_query],  # Vector search
+                top=top,
+                filter=filters,
+                select=["id", "title", "chunk", "file_name", "folder", "file_path", "last_modified"]
+            )
+            
+            search_results = []
+            for result in results:
+                search_result = {
+                    "score": result.get('@search.score', 0),
+                    "title": result.get('title', 'Untitled'),
+                    "chunk": result.get('chunk', ''),
+                    "file_name": result.get('file_name', ''),
+                    "folder": result.get('folder', ''),
+                    "file_path": result.get('file_path', ''),
+                    "last_modified": result.get('last_modified', ''),
+                    "search_type": "hybrid"
+                }
+                search_results.append(search_result)
+            
+            return search_results
+            
+        except Exception as e:
+            print(f"Error during hybrid search: {e}")
+            return []
+    
+    def semantic_search(
+        self,
+        query: str,
+        top: int = 20,
+        filters: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """Search using semantic ranking with captions and answers.
+        
+        Args:
+            query: Search query string
+            top: Number of results to return (default: 5)
+            filters: OData filter expression
+            
+        Returns:
+            List of search results with semantic ranking, captions, and answers
+        """
+        try:
+            # Generate embedding for the query
+            query_vector = self._generate_embedding(query)
+            
+            if not query_vector:
+                print("Failed to generate query embedding, falling back to keyword search")
+                return self.search(query, top, filters)
+            
+            # Create vectorized query
+            vector_query = VectorizedQuery(
+                vector=query_vector,
+                k_nearest_neighbors=50,
+                fields="content_vector"
+            )
+            
+            results = self.search_client.search(
+                search_text=query,
+                vector_queries=[vector_query],
+                query_type=QueryType.SEMANTIC,
+                semantic_configuration_name="default",
+                query_caption=QueryCaptionType.NONE,
+                query_answer=QueryAnswerType.NONE,
+                top=top,
+                filter=filters,
+                select=["id", "title", "chunk", "file_name", "folder", "file_path", "last_modified"]
+            )
+            
+            search_results = []
+            
+            # Extract semantic answers if available
+            answers = []
+            if hasattr(results, 'get_answers'):
+                answers = results.get_answers() or []
+            
+            for result in results:
+                # Extract captions
+                captions = []
+                if hasattr(result, '@search.captions'):
+                    captions = result.get('@search.captions', [])
+                
+                search_result = {
+                    "score": result.get('@search.score', 0),
+                    "reranker_score": result.get('@search.reranker_score', 0),
+                    "title": result.get('title', 'Untitled'),
+                    "chunk": result.get('chunk', ''),
+                    "file_name": result.get('file_name', ''),
+                    "folder": result.get('folder', ''),
+                    "file_path": result.get('file_path', ''),
+                    "last_modified": result.get('last_modified', ''),
+                    "captions": [caption.text for caption in captions] if captions else [],
+                    "search_type": "semantic"
+                }
+                search_results.append(search_result)
+            
+            # Add answers to the first result if available
+            if answers and search_results:
+                search_results[0]["answers"] = [answer.text for answer in answers]
+            
+            return search_results
+            
+        except Exception as e:
+            print(f"Error during semantic search: {e}")
             return []
     
     def search_by_folder(self, query: str, folder: str, top: int = 5) -> List[Dict[str, Any]]:
@@ -128,7 +350,7 @@ class KnowledgeBaseSearcher:
         """
         return self.search(query="*", top=top, order_by=["last_modified desc"])
     
-    def get_facets(self, facet_fields: List[str] = None) -> Dict[str, Any]:
+    def get_facets(self, facet_fields: Optional[List[str]] = None) -> Dict[str, Any]:
         """Get facet counts for specified fields.
         
         Args:
@@ -150,7 +372,7 @@ class KnowledgeBaseSearcher:
             # Extract facets from results
             facets = {}
             if hasattr(results, 'get_facets'):
-                facets = results.get_facets()
+                facets = results.get_facets() or {}
             
             return facets
             
@@ -163,42 +385,27 @@ def load_search_config() -> Dict[str, str]:
     """Load search configuration from environment variables."""
     load_dotenv()
     
-    required_vars = [
-        "AZURE_SEARCH_SERVICE_NAME",
-        "AZURE_SEARCH_ADMIN_KEY"
-    ]
-    
-    config = {}
-    missing_vars = []
-    
-    for var in required_vars:
-        value = os.getenv(var)
-        if not value:
-            missing_vars.append(var)
-        config[var] = value
-    
-    if missing_vars:
-        raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
-    
-    return config
+    # Using DefaultAzureCredential, so no need for API keys
+    # Just ensure the basic config is loaded
+    return {}
 
 
 def interactive_search():
     """Interactive search interface."""
     try:
         # Load configuration
-        config = load_search_config()
+        load_search_config()
         
         # Initialize searcher
-        searcher = KnowledgeBaseSearcher(
-            search_service_name=config["AZURE_SEARCH_SERVICE_NAME"],
-            search_admin_key=config["AZURE_SEARCH_ADMIN_KEY"]
-        )
+        searcher = KnowledgeBaseSearcher()
         
         print("Knowledge Base Search Interface")
         print("=" * 40)
         print("Available commands:")
-        print("  search <query>     - Search for documents")
+        print("  search <query>     - Keyword search for documents")
+        print("  vector <query>     - Vector/semantic similarity search")
+        print("  hybrid <query>     - Hybrid search (keyword + vector)")
+        print("  semantic <query>   - Semantic search with ranking and captions")
         print("  folder <folder>    - List documents in a folder")
         print("  list              - List all documents")
         print("  facets            - Show folder facets")
@@ -224,7 +431,7 @@ def interactive_search():
                         continue
                     
                     query = parts[1]
-                    print(f"\nSearching for: '{query}'")
+                    print(f"\nKeyword searching for: '{query}'")
                     results = searcher.search(query, top=5)
                     
                     if not results:
@@ -233,9 +440,77 @@ def interactive_search():
                         for i, result in enumerate(results, 1):
                             print(f"\n{i}. {result['title']} (Score: {result['score']:.2f})")
                             print(f"   File: {result['file_name']} | Folder: {result['folder']}")
-                            print(f"   Content: {result['content']}")
-                            if result['highlights']:
+                            print(f"   Content: {result['chunk']}")
+                            if result.get('highlights'):
                                 print(f"   Highlights: {result['highlights']}")
+                
+                elif command == 'vector':
+                    if len(parts) < 2:
+                        print("Usage: vector <query>")
+                        continue
+                    
+                    query = parts[1]
+                    print(f"\nVector searching for: '{query}'")
+                    results = searcher.vector_search(query, top=5)
+                    
+                    if not results:
+                        print("No results found.")
+                    else:
+                        for i, result in enumerate(results, 1):
+                            print(f"\n{i}. {result['title']} (Similarity: {result['score']:.4f})")
+                            print(f"   File: {result['file_name']} | Folder: {result['folder']}")
+                            print(f"   Content: {result['chunk']}")
+                
+                elif command == 'hybrid':
+                    if len(parts) < 2:
+                        print("Usage: hybrid <query>")
+                        continue
+                    
+                    query = parts[1]
+                    print(f"\nHybrid searching for: '{query}'")
+                    results = searcher.hybrid_search(query, top=5)
+                    
+                    if not results:
+                        print("No results found.")
+                    else:
+                        for i, result in enumerate(results, 1):
+                            print(f"\n{i}. {result['title']} (Score: {result['score']:.4f})")
+                            print(f"   File: {result['file_name']} | Folder: {result['folder']}")
+                            print(f"   Content: {result['chunk']}")
+                
+                elif command == 'semantic':
+                    if len(parts) < 2:
+                        print("Usage: semantic <query>")
+                        continue
+                    
+                    query = parts[1]
+                    print(f"\nSemantic searching for: '{query}'")
+                    results = searcher.semantic_search(query, top=5)
+                    
+                    if not results:
+                        print("No results found.")
+                    else:
+                        # Display answers first if available
+                        if results and 'answers' in results[0]:
+                            print("\n📋 ANSWERS:")
+                            for answer in results[0]['answers']:
+                                print(f"   {answer}")
+                            print()
+                        
+                        for i, result in enumerate(results, 1):
+                            reranker_score = result.get('reranker_score', 0)
+                            score_text = f"Score: {result['score']:.4f}"
+                            if reranker_score > 0:
+                                score_text += f", Reranker: {reranker_score:.4f}"
+                            
+                            print(f"\n{i}. {result['title']} ({score_text})")
+                            print(f"   File: {result['file_name']} | Folder: {result['folder']}")
+                            
+                            # Show captions if available
+                            if result.get('captions'):
+                                print(f"   📝 Captions: {'; '.join(result['captions'])}")
+                            else:
+                                print(f"   Content: {result['chunk']}")
                 
                 elif command == 'folder':
                     if len(parts) < 2:
@@ -284,9 +559,68 @@ def interactive_search():
         print("Please ensure your Azure AI Search service is set up and .env file is configured.")
 
 
+def demo_search_capabilities():
+    """Demo function to showcase different search capabilities."""
+    try:
+        searcher = KnowledgeBaseSearcher()
+        
+        # Example queries to demonstrate different search types
+        demo_queries = [
+            "What is Meridian's mission statement?",
+            "AI consulting expertise and capabilities",
+            "project methodology and phases",
+            "team structure for digital transformation"
+        ]
+        
+        print("🔍 SEARCH CAPABILITIES DEMO")
+        print("=" * 50)
+        
+        for query in demo_queries:
+            print(f"\n📝 Query: '{query}'")
+            print("-" * 40)
+            
+            # Keyword Search
+            print("🔤 Keyword Search:")
+            keyword_results = searcher.search(query, top=2)
+            for i, result in enumerate(keyword_results[:1], 1):
+                print(f"  {i}. {result['title']} (Score: {result['score']:.3f})")
+                print(f"     {result['chunk'][:100]}...")
+            
+            # Vector Search
+            print("\n🧠 Vector Search:")
+            vector_results = searcher.vector_search(query, top=2)
+            for i, result in enumerate(vector_results[:1], 1):
+                print(f"  {i}. {result['title']} (Score: {result['score']:.3f})")
+                print(f"     {result['chunk'][:100]}...")
+            
+            # Semantic Search
+            print("\n🎯 Semantic Search:")
+            semantic_results = searcher.semantic_search(query, top=2)
+            for i, result in enumerate(semantic_results[:1], 1):
+                reranker = result.get('reranker_score', 0)
+                score_info = f"Score: {result['score']:.3f}"
+                if reranker > 0:
+                    score_info += f", Reranker: {reranker:.3f}"
+                print(f"  {i}. {result['title']} ({score_info})")
+                if result.get('captions'):
+                    print(f"     Caption: {result['captions'][0][:100]}...")
+                else:
+                    print(f"     {result['chunk'][:100]}...")
+            
+            print("\n" + "="*50)
+    
+    except Exception as e:
+        print(f"Demo error: {e}")
+
+
 def main():
     """Main function for the search utility."""
-    interactive_search()
+    import sys
+    
+    if len(sys.argv) > 1 and sys.argv[1] == "demo":
+        demo_search_capabilities()
+    else:
+        interactive_search()
 
 
 if __name__ == "__main__":
