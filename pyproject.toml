@@ -1,0 +1,19 @@
+[project]
+name = "evaluation-intro"
+version = "0.1.0"
+description = "Azure AI Search setup for processing markdown files from knowledge base"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "agent-framework>=1.0.0b251001",
+    "azure-search-documents>=11.4.0",
+    "azure-storage-blob>=12.19.0",
+    "python-dotenv>=1.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["azure_search_setup", "search_knowledge_base", "main"]
